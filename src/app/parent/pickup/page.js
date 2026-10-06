@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Check,
   UsersRound,
 } from "lucide-react";
 
-export default function ParentPickupPage() {
+function ParentPickupContent() {
   const router = useRouter();
   const searchParams = useSearchParams(); 
 
@@ -303,5 +304,12 @@ export default function ParentPickupPage() {
 
       </div>
     </main>
+  );
+}
+export default function ParentPickupPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ParentPickupContent />
+    </Suspense>
   );
 }

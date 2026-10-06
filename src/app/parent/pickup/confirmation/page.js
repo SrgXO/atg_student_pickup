@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, CircleCheck } from "lucide-react";
 
 import { students } from "@/data/students";
 
-export default function ConfirmationPage() {
+ function ConfirmationContent() {
 
   const searchParams = useSearchParams();
 
@@ -160,5 +161,12 @@ export default function ConfirmationPage() {
 
       </div>
     </main>
+  );
+}
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmationContent />
+    </Suspense>
   );
 }
