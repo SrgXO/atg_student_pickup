@@ -39,7 +39,8 @@ yarn-error.log*
 /src/lib/devUser.js
 /src/scripts/setTestPasswords.js
 
-
+#local archives 
+*.zip
 
 # vercel
 .vercel
