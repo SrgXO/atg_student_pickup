@@ -20,7 +20,7 @@ if (!auth.user) {
     { status: auth.status }
   );
 }
- 
+
 
     // 2. Count today's pickup records by status.
     // Use arrival_time for arrival-stage metrics, but
@@ -113,10 +113,16 @@ if (!auth.user) {
     // 4. Return dashboard-ready JSON.
     const counts = statusRows[0];
     const durations = durationRows[0];
+    const today = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Bangkok",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+}).format(new Date());
 
     return NextResponse.json({
       success: true,
-      date: new Date().toISOString().slice(0, 10),
+      date: today,
 
       counts: {
         total: Number(counts.total),

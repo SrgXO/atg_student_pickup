@@ -10,6 +10,12 @@ const pool = mysql.createPool({  //reusable connection pool for MySQL database
   waitForConnections: true,
   connectionLimit: 10, //maximum number of connections in the pool
   queueLimit: 0,
+
+  timezone: "+07:00",
+});
+// Set Bangkok timezone whenever the pool creates a new connection
+pool.on("connection", (connection) => {
+  connection.query("SET SESSION time_zone = '+07:00'");
 });
 
 export default pool;
