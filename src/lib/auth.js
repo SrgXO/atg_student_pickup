@@ -8,7 +8,7 @@ import db from "@/lib/db";
 
 export const SESSION_COOKIE = "atg_session";
 
-const SESSION_DAYS = 7;
+const SESSION_DAYS = 1;
 
 function hashToken(token) {
   return createHash("sha256")
