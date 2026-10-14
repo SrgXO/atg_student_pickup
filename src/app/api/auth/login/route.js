@@ -1,15 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";  
 import bcrypt from "bcryptjs";
 
 import db from "@/lib/db";
 import { createSession } from "@/lib/auth";
 
-export const runtime = "nodejs";
+export const runtime = "nodejs"; 
 export const dynamic = "force-dynamic";
 
-export async function POST(request) {
+export async function POST(request) { 
   try {
-    const body = await request.json();
+    const body = await request.json(); 
 
     const email =
       typeof body.email === "string"
@@ -21,7 +21,7 @@ export async function POST(request) {
         ? body.password
         : "";
 
-    if (!email || !password) {
+    if (!email || !password) { 
       return NextResponse.json(
         {
           success: false,
