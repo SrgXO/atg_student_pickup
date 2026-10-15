@@ -7,9 +7,9 @@ import { CheckCircle2, CircleCheck } from "lucide-react";
 
 import { students } from "@/data/students";
 
- function ConfirmationContent() {
+function ConfirmationContent() {
 
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); 
 
   const studentIds =
     (searchParams.get("students") || "1").split(",").map(Number);

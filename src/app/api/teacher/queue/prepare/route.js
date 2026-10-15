@@ -20,7 +20,7 @@ if (!auth.user) {
     const body = await request.json();
     const queueIds = [...new Set(body.queueIds || [])]
       .map(Number)
-      .filter((id) => Number.isSafeInteger(id) && id > 0);
+      .filter((id) => Number.isSafeInteger(id) && id > 0); 
 
     if (queueIds.length === 0) {
       return NextResponse.json(
@@ -101,7 +101,7 @@ if (!auth.user) {
     /*
      * Lock every selected queue row.
      *
-     * We intentionally validate ALL selected rows before updating
+     * Intentionally validate ALL selected rows before updating
      * anything. If even one is no longer ARRIVED, the entire
      * operation rolls back.
      */

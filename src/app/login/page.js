@@ -22,12 +22,12 @@ export default function LoginPage() {
     useState(null);
 
   async function handleLogin(event) {
-    event.preventDefault();
+    event.preventDefault(); 
 
-    if (loading) return;
+    if (loading) return; 
 
     try {
-      setLoading(true);
+      setLoading(true); 
       setError("");
 
       const response = await fetch(

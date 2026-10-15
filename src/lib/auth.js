@@ -40,7 +40,7 @@ export async function createSession(userId) {
   const cookieStore = await cookies();
 
   cookieStore.set(SESSION_COOKIE, token, {
-    httpOnly: true,
+    httpOnly: true, 
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
@@ -55,7 +55,7 @@ export async function getCurrentUser() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE)?.value;
 
-  if (!token || !/^[a-f0-9]{64}$/.test(token)) {
+  if (!token || !/^[a-f0-9]{64}$/.test(token)) {  // Validate the token format to ensure it is a 64-character hexadecimal string.
     return null;
   }
 
@@ -106,7 +106,7 @@ export async function getCurrentUser() {
 
 // Use this helper in protected API routes.
 // It NEVER falls back to auth.user.user_id.
-export async function requireUser(requiredRole = null) {
+export async function requireUser(requiredRole = null) { 
   const user = await getCurrentUser();
 
   if (!user) {
