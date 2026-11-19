@@ -330,7 +330,7 @@ export default function TeacherPage() {
 
             <div>
               <h1 className="text-2xl font-bold text-black">
-                Gate Duty
+                Slot Duty
               </h1>
               
 
@@ -342,7 +342,7 @@ export default function TeacherPage() {
 
               {duty && (
                 <p className="mt-1 text-xs text-gray-400">
-                  Gate {duty.gate_slot} ·{" "}
+                  Slot {duty.gate_slot} · Gate {duty.gate_code} ·{" "}
                   {duty.start_time?.slice(0, 5)}–
                   {duty.end_time?.slice(0, 5)}
                 </p>
@@ -351,7 +351,7 @@ export default function TeacherPage() {
 
             <span className="rounded-full bg-black px-3 py-2 text-[10px] font-semibold text-white">
               {onDuty
-                ? `Gate ${duty?.gate_slot}`
+                ? `Slot ${duty?.gate_slot} · Gate ${duty?.gate_code}`
                 : "Not Assigned"}
             </span>
 
@@ -389,7 +389,7 @@ export default function TeacherPage() {
           <div className="mt-8">
 
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400">
-              Gate Queue
+              Slot Queue
             </p>
 
             <div className="grid grid-cols-3 gap-1 rounded-xl bg-gray-100 p-1">
@@ -623,7 +623,7 @@ export default function TeacherPage() {
 
                           <p className="mt-1 text-xs font-semibold">
                             {item.handler_gate_slot
-                              ? `Teacher ${item.handler_gate_slot}`
+                              ? `Slot ${item.handler_gate_slot} · Gate ${item.handler_gate_code || "A"}`
                               : "Not yet assigned"}
                           </p>
                         </div>

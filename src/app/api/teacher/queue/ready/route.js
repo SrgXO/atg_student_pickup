@@ -180,7 +180,7 @@ if (!auth.user) {
         {
           success: false,
           message:
-            "You can only mark students assigned to your gate as ready.",
+            "You can only mark students assigned to your slot as ready.",
         },
         { status: 403 }
       );
@@ -246,7 +246,7 @@ if (!auth.user) {
           "PREPARING",
           "READY",
           teacher.user_id,
-          `Gate ${duty.gate_slot}: ${teacher.first_name} ${teacher.last_name} marked the student ready.`,
+          `Slot ${duty.gate_slot}: ${teacher.first_name} ${teacher.last_name} marked the student ready.`,
         ]
       );
     }

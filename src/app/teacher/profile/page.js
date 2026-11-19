@@ -181,7 +181,7 @@ export default function TeacherProfilePage() {
                         </p>
 
                         <h4 className="mt-2 text-xl font-bold">
-                          Gate {duty.gate_slot}
+                          Slot {duty.gate_slot} · Gate {duty.gate_code}
                         </h4>
 
                         <p className="mt-2 text-xs text-gray-400">

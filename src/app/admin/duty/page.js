@@ -41,6 +41,7 @@ function formatDisplayDate(dateString) {
 const INITIAL_FORM = {
   teacher_id: "",
   gate_slot: "",
+  gate_code: "A",
   start_time: "13:30",
   end_time: "15:30",
 };
@@ -177,6 +178,7 @@ export default function DutyPage() {
     if (
       !form.teacher_id ||
       !form.gate_slot ||
+      !form.gate_code ||
       !form.start_time ||
       !form.end_time
     ) {
@@ -203,6 +205,7 @@ export default function DutyPage() {
           duty_date: selectedDate,
           teacher_id: Number(form.teacher_id),
           gate_slot: form.gate_slot,
+          gate_code: form.gate_code,
           start_time: form.start_time,
           end_time: form.end_time,
         }),
@@ -236,7 +239,7 @@ export default function DutyPage() {
 
 async function handleDelete(assignment) {
   const confirmed = window.confirm(
-    `Delete ${assignment.teacher_name}'s Gate ${assignment.gate_slot} assignment for ${formatDisplayDate(assignment.duty_date)}?`
+    `Delete ${assignment.teacher_name}'s Slot ${assignment.gate_slot} assignment for ${formatDisplayDate(assignment.duty_date)}?`
   );
 
   if (!confirmed) return;
@@ -396,7 +399,7 @@ async function handleDelete(assignment) {
                   </th>
 
                   <th className="px-6 py-4">
-                    Gate
+                    Slot / Gate
                   </th>
 
                   <th className="px-6 py-4">
@@ -433,7 +436,7 @@ async function handleDelete(assignment) {
                       colSpan={6}
                       className="px-6 py-12 text-center text-sm text-gray-400"
                     >
-                      No gate assignments for this date.
+                      No slot assignments for this date.
                     </td>
                   </tr>
                 ) : (
@@ -448,7 +451,7 @@ async function handleDelete(assignment) {
 
                       <td className="px-6 py-5">
                         <span className="rounded-lg bg-gray-100 px-3 py-2 text-xs font-bold">
-                          Gate {row.gate_slot}
+                          Slot {row.gate_slot} · Gate {row.gate_code}
                         </span>
                       </td>
 
@@ -491,11 +494,11 @@ async function handleDelete(assignment) {
           <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4 text-xs text-gray-400">
 
             <span>
-              {assignments.length} of 2 gates assigned
+              {assignments.length} of 2 slots assigned
             </span>
 
             <span>
-              One teacher per gate per day
+              One teacher per slot per day
             </span>
 
           </div>
@@ -609,7 +612,7 @@ async function handleDelete(assignment) {
                   htmlFor="duty-gate"
                   className="mb-2 block text-xs font-semibold"
                 >
-                  Assigned Gate
+                  Assigned Slot
                 </label>
 
                 <select
@@ -625,14 +628,22 @@ async function handleDelete(assignment) {
                   className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm outline-none focus:border-black"
                 >
                   <option value="">
-                    Select gate
+                    Select slot
                   </option>
 
                   {availableGates.map((gate) => (
                     <option key={gate} value={gate}>
-                      Gate {gate}
+                      Slot {gate}
                     </option>
                   ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="duty-gate-code" className="mb-2 block text-xs font-semibold">Physical Gate</label>
+                <select id="duty-gate-code" value={form.gate_code} onChange={event => updateForm("gate_code", event.target.value)} required
+                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm">
+                  <option value="A">Gate A</option><option value="B">Gate B</option>
                 </select>
               </div>
 
@@ -688,8 +699,8 @@ async function handleDelete(assignment) {
               </div>
 
               <p className="text-xs leading-5 text-gray-400">
-                Each gate can have one teacher per day.
-                A teacher cannot be assigned to both gates
+                Each slot can have one teacher per day.
+                A teacher cannot be assigned to both slots
                 on the same date.
               </p>
 

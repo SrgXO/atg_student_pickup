@@ -231,7 +231,7 @@ if (!auth.user) {
           "ARRIVED",
           "PREPARING",
           teacher.user_id,
-          `Gate ${duty.gate_slot}: ${teacher.first_name} ${teacher.last_name} started preparing the student.`,
+          `Slot ${duty.gate_slot}: ${teacher.first_name} ${teacher.last_name} started preparing the student.`,
         ]
       );
     }

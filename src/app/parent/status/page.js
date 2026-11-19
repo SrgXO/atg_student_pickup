@@ -37,6 +37,7 @@ export default function ParentStatusPage() {
   const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState(null);
   const [handoverQueueId, setHandoverQueueId] = useState(null);
+  const [cancellingId, setCancellingId] = useState(null);
 
   // Load both active and completed pickups.
   const fetchPickups = useCallback(async (silent = false) => {
@@ -106,6 +107,18 @@ export default function ParentStatusPage() {
     setHandoverQueueId(null);
   }
 }
+
+  async function handleCancel(queueId) {
+    if (!window.confirm("Cancel this pickup queue?")) return;
+    setCancellingId(queueId);
+    try {
+      const response = await fetch(`/api/parent/pickups/${queueId}/cancel`, { method: "POST" });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || "Cancellation failed.");
+      await fetchPickups(true);
+    } catch (err) { setError(err.message); }
+    finally { setCancellingId(null); }
+  }
 
   // Initial fetch and five-second polling.
   useEffect(() => {
@@ -327,6 +340,13 @@ export default function ParentStatusPage() {
                           </Link>
                         )}
 
+                        {["REQUESTED", "ARRIVED"].includes(pickup.pickup_status) && (
+                          <button type="button" onClick={() => handleCancel(pickup.pickup_queue_id)}
+                            disabled={cancellingId === pickup.pickup_queue_id}
+                            className="mt-3 rounded-lg border border-red-300 px-4 py-2 text-xs font-semibold text-red-700 disabled:opacity-50">
+                            {cancellingId === pickup.pickup_queue_id ? "Cancelling..." : "Cancel Queue"}
+                          </button>
+                        )}
                         {pickup.pickup_status === "READY" && (
                           <p className="mt-3 rounded-lg bg-white p-3 text-xs font-semibold text-black">
                             Please proceed to the pickup gate.

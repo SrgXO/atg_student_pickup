@@ -29,6 +29,7 @@ if (!auth.user) {
         ds.duty_id,
         ds.duty_date,
         ds.gate_slot,
+        ds.gate_code,
         ds.start_time,
         ds.end_time,
 
@@ -58,7 +59,7 @@ if (!auth.user) {
       total: rows.length,
       teachers: rows.map((row) => ({
         ...row,
-        gate_label: `Gate ${row.gate_slot}`,
+        gate_label: `Slot ${row.gate_slot} · Gate ${row.gate_code}`,
       })),
     });
   } catch (error) {

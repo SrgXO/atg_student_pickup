@@ -66,6 +66,7 @@ export async function GET() {
       SELECT
         duty_id,
         gate_slot,
+        gate_code,
         duty_date,
         start_time,
         end_time
@@ -122,7 +123,8 @@ export async function GET() {
         ht.first_name AS handler_first_name,
         ht.last_name AS handler_last_name,
 
-        hd.gate_slot AS handler_gate_slot
+        hd.gate_slot AS handler_gate_slot,
+        hd.gate_code AS handler_gate_code
 
       FROM pickup_queue pq
 

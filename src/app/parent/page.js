@@ -10,7 +10,8 @@ export default function ParentPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [arrivingRequestId, setArrivingRequestId] = useState(null);
-  const [handoverQueueId, setHandoverQueueId] = useState(null); 
+  const [handoverQueueId, setHandoverQueueId] = useState(null);
+  const [cancellingId, setCancellingId] = useState(null); 
   const [currentUser, setCurrentUser] = useState(null);
   const [userError, setUserError] = useState("");
   // --------------------------------------------------
@@ -176,6 +177,18 @@ async function handleHandover(pickupQueueId) {
 
   
 
+
+  async function handleCancel(queueId) {
+    if (!window.confirm("Cancel this pickup queue?")) return;
+    setCancellingId(queueId);
+    try {
+      const response = await fetch(`/api/parent/pickups/${queueId}/cancel`, { method: "POST" });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.message || "Cancellation failed.");
+      await fetchChildren();
+    } catch (err) { setError(err.message); }
+    finally { setCancellingId(null); }
+  }
 
   // --------------------------------------------------
   // CHILDREN AVAILABLE FOR A NEW PICKUP
@@ -405,6 +418,13 @@ async function handleHandover(pickupQueueId) {
                           </button>
 
                         </div>
+                      )}
+                      {["REQUESTED", "ARRIVED"].includes(student.pickup_status) && (
+                        <button type="button" onClick={() => handleCancel(student.pickup_queue_id)}
+                          disabled={cancellingId === student.pickup_queue_id}
+                          className="mt-3 w-full rounded-xl border border-red-300 px-4 py-3 text-xs font-semibold text-red-700 disabled:opacity-50">
+                          {cancellingId === student.pickup_queue_id ? "Cancelling..." : "Cancel Queue"}
+                        </button>
                       )}
                       {/* -------------------------------- */}
                       {/* ARRIVED */}

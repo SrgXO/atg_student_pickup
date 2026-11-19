@@ -65,6 +65,7 @@ if (!auth.user) {
         ds.duty_id,
         DATE_FORMAT(ds.duty_date, '%Y-%m-%d') AS duty_date,
         ds.gate_slot,
+        ds.gate_code,
         TIME_FORMAT(ds.start_time, '%H:%i') AS start_time,
         TIME_FORMAT(ds.end_time, '%H:%i') AS end_time,
         t.teacher_id,
@@ -132,6 +133,7 @@ if (!auth.user) {
     const teacherId = Number(body.teacher_id);
     const date = body.duty_date;
     const gate = body.gate_slot;
+    const gateCode = body.gate_code;
     const startTime = body.start_time;
     const endTime = body.end_time;
 
@@ -141,6 +143,7 @@ if (!auth.user) {
       typeof date !== "string" ||
       !validDate(date) ||
       !["A", "B"].includes(gate) ||
+      !["A", "B"].includes(gateCode) ||
       typeof startTime !== "string" ||
       typeof endTime !== "string" ||
       !TIME_PATTERN.test(startTime) ||
@@ -194,7 +197,7 @@ if (!auth.user) {
       return NextResponse.json(
         {
           success: false,
-          message: `Gate ${gate} already has a teacher assigned on this date.`,
+          message: `Slot ${gate} already has a teacher assigned on this date.`,
         },
         { status: 409 }
       );
@@ -218,18 +221,19 @@ if (!auth.user) {
         teacher_id,
         duty_date,
         gate_slot,
+        gate_code,
         start_time,
         end_time
       )
-      VALUES (?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?)
       `,
-      [teacherId, date, gate, startTime, endTime]
+      [teacherId, date, gate, gateCode, startTime, endTime]
     );
 
     return NextResponse.json(
       {
         success: true,
-        message: `Gate ${gate} assignment created.`,
+        message: `Slot ${gate} at Gate ${gateCode} assignment created.`,
         duty_id: result.insertId,
       },
       { status: 201 }
@@ -239,7 +243,7 @@ if (!auth.user) {
       return NextResponse.json(
         {
           success: false,
-          message: "Teacher or gate is already assigned on this date.",
+          message: "Teacher or slot is already assigned on this date.",
         },
         { status: 409 }
       );

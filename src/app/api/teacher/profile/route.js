@@ -58,6 +58,7 @@ export async function GET() {
       SELECT
         duty_id,
         gate_slot,
+        gate_code,
         duty_date,
         start_time,
         end_time

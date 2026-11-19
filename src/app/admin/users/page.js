@@ -25,6 +25,11 @@ export default function UsersPage() {
 
   const [showAddUser, setShowAddUser] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const [showStudentImport, setShowStudentImport] = useState(false);
+  const [studentImportFile, setStudentImportFile] = useState(null);
+  const [studentImportResult, setStudentImportResult] = useState(null);
+  const [studentImportError, setStudentImportError] = useState("");
+  const [studentImporting, setStudentImporting] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -320,6 +325,23 @@ async function handleImport(event) {
   }
 }
 
+async function handleStudentImport(event) {
+  event.preventDefault();
+  if (!studentImportFile || studentImporting) return;
+  setStudentImporting(true);
+  setStudentImportError("");
+  try {
+    const data = new FormData();
+    data.append("file", studentImportFile);
+    const response = await fetch("/api/admin/students/import", { method: "POST", body: data });
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.message || "Import failed.");
+    setStudentImportResult(result);
+    await fetchRecords(true);
+  } catch (err) { setStudentImportError(err.message); }
+  finally { setStudentImporting(false); }
+}
+
 function closeImport() {
   if (importing) return;
 
@@ -363,6 +385,11 @@ function closeImport() {
         >
           <Upload size={16} />
           Import CSV
+        </button>
+
+        <button type="button" onClick={() => { setShowStudentImport(true); setStudentImportResult(null); }}
+          className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold hover:bg-gray-100">
+          <Upload size={16} /> Import Students
         </button>
 
         <a
@@ -942,6 +969,28 @@ function closeImport() {
 
 {/* IMPORT CSV MODAL */}
 
+{showStudentImport && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-5">
+    <div className="w-full max-w-xl rounded-xl bg-white p-6 shadow-xl space-y-4">
+      <h2 className="text-lg font-bold">Bulk Import Students</h2>
+      <p className="text-xs text-gray-600">CSV columns: first_name,last_name,classroom_name,parent_email,relationship</p>
+      <p className="text-xs text-gray-600">Classroom must already exist. Parent email must belong to an active parent account. Up to 500 rows.</p>
+      <a className="text-sm text-blue-700 underline" href="/student-import-template.csv" download>Download CSV template</a>
+      <form onSubmit={handleStudentImport} className="space-y-4">
+        <input type="file" accept=".csv,text/csv" required onChange={e => setStudentImportFile(e.target.files?.[0] || null)} className="w-full text-sm" />
+        {studentImportError && <p role="alert" className="text-sm text-red-600">{studentImportError}</p>}
+        {studentImportResult && <div className="text-sm">
+          <p>Created: {studentImportResult.summary.created} / {studentImportResult.summary.total}; Failed: {studentImportResult.summary.failed}</p>
+          <div className="max-h-40 overflow-y-auto">{studentImportResult.results.filter(r => !r.success).map(r => <p key={r.row} className="text-red-600">Row {r.row}: {r.message}</p>)}</div>
+        </div>}
+        <div className="flex gap-3 justify-end">
+          <button type="button" disabled={studentImporting} onClick={() => { setShowStudentImport(false); setStudentImportFile(null); }} className="rounded-lg border px-4 py-2">Close</button>
+          <button type="submit" disabled={studentImporting || !studentImportFile} className="rounded-lg bg-black px-4 py-2 text-white disabled:opacity-50">{studentImporting ? "Importing..." : "Import Students"}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
 {showImport && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-5">
     <div

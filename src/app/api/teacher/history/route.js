@@ -61,6 +61,7 @@ export async function GET() {
         ht.first_name AS handler_first_name,
         ht.last_name AS handler_last_name,
         hd.gate_slot AS handler_gate_slot,
+        hd.gate_code AS handler_gate_code,
 
         hu.first_name AS handover_first_name,
         hu.last_name AS handover_last_name,
